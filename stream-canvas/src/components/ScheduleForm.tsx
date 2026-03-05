@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function ScheduleForm({ schedule, setSchedule }: Props) {
-
+    
     const days: Day[] = [
         "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"
     ]
@@ -54,6 +54,16 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
             <h2 className="text-2xl font-bold mb-4">
                 Schedule Editor
             </h2>
+            <select
+            value={schedule.template}
+            onChange={(e) => setSchedule(prev => ({
+                ...prev,
+                template: e.target.value as any
+            }))}
+            >
+                <option value="default">Default</option>
+                <option value="hololive">Hololive</option>
+            </select>
 
             {/* TITLE */}
             <div className="mb-4">

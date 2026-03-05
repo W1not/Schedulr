@@ -1,7 +1,7 @@
 import DefaultTemplate from "./DefaultTemplate"
-import MinimalTemplate from "./MinimalTemplate"
+import HololiveTemplate from "./HoloTemplate"
 
 export const templateRegistry = {
   default: DefaultTemplate,
-  minimal: MinimalTemplate
+  hololive: HololiveTemplate
 }

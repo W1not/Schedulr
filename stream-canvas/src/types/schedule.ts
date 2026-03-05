@@ -23,7 +23,7 @@ export interface ScheduleEvent {
 
 export type TemplateType =
     | "default"
-    | "minimal"
+    | "hololive"
 
 export interface Schedule {
     title: string
