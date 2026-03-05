@@ -15,23 +15,24 @@ export default function SchedulePreview({ schedule }: Props) {
     const Template = templateRegistry[schedule.template]
 
     const exportImage = async () => {
+
         if (!previewRef.current) return
+
+        // Esperar a que todas las fuentes carguen
+        await document.fonts.ready
 
         const canvas = await html2canvas(previewRef.current, {
             scale: 3,
             useCORS: true,
             backgroundColor: null,
-            allowTaint: true
+            logging: false,
         })
 
         const image = canvas.toDataURL("image/png")
-
         const link = document.createElement("a")
         link.href = image
         link.download = "schedule.png"
-        document.body.appendChild(link)
         link.click()
-        document.body.removeChild(link)
     }
 
     return (

@@ -29,7 +29,7 @@ export default function HololiveTemplate({ schedule }: Props) {
           style={{
             position: "absolute",
             top: "50%",
-            left: "20%",
+            left: "50%",
             minWidth: "100%",
             minHeight: "100%",
             transform: "translate(-50%, -50%)",
@@ -48,7 +48,7 @@ export default function HololiveTemplate({ schedule }: Props) {
           width: "60%",
           height: "100%",
           padding: "40px",
-          backgroundColor: "rgba(10,10,20,0.85)", // ← reemplazo del blur
+          backgroundColor: "rgba(10,10,20,0.85)",
           zIndex: 1
         }}
       >
@@ -103,8 +103,8 @@ export default function HololiveTemplate({ schedule }: Props) {
             <div
               key={event.id}
               style={{
-                display: "flex",
-                alignItems: "flex-start",
+                display: "grid",
+                gridTemplateColumns: "90px 1fr",
                 backgroundColor: "rgba(255,255,255,0.08)",
                 borderRadius: "16px",
                 padding: "16px"
@@ -115,9 +115,11 @@ export default function HololiveTemplate({ schedule }: Props) {
               <div
                 style={{
                   width: "90px",
-                  fontWeight: 900,
+                  display: "flex",
+                  fontWeight: "900",
                   fontSize: "22px",
                   color: "rgba(120,200,255,1)",
+                  transform: "translateY(-5px)"
                 }}
               >
                 {event.day}
@@ -129,7 +131,8 @@ export default function HololiveTemplate({ schedule }: Props) {
                 <div
                   style={{
                     fontSize: "18px",
-                    fontWeight: 700
+                    fontWeight: "700",
+                    lineHeight: "18px"
                   }}
                 >
                   {event.mainText || "Event"}
@@ -138,6 +141,7 @@ export default function HololiveTemplate({ schedule }: Props) {
                 <div
                   style={{
                     fontSize: "14px",
+                    lineHeight: "14px",
                     color: "rgba(200,200,210,1)"
                   }}
                 >
