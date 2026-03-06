@@ -11,7 +11,7 @@ export default function HololiveTemplate({ schedule }: Props) {
     <div
       style={{
         width: "1920px",
-        height: "980px",
+        height: "1080px",
         position: "relative",
         overflow: "hidden",
         fontFamily: "sans-serif",
@@ -45,10 +45,10 @@ export default function HololiveTemplate({ schedule }: Props) {
           position: "absolute",
           right: 0,
           top: 0,
-          width: "60%",
+          width: "45%",
           height: "100%",
           padding: "40px",
-          backgroundColor: "rgba(10,10,20,0.85)",
+          backgroundColor: "rgba(10,10,20,0.85)", // ← reemplazo del blur
           zIndex: 1
         }}
       >
@@ -58,7 +58,7 @@ export default function HololiveTemplate({ schedule }: Props) {
 
           <h1
             style={{
-              fontSize: "56px",
+              fontSize: "80px",
               fontWeight: 900,
               lineHeight: 1
             }}
@@ -104,8 +104,7 @@ export default function HololiveTemplate({ schedule }: Props) {
               key={event.id}
               style={{
                 display: "flex",
-                alignContent: "flex-center",
-                gridTemplateColumns: "90px 1fr",
+                alignItems: "center",
                 backgroundColor: "rgba(255,255,255,0.08)",
                 borderRadius: "16px",
                 padding: "16px"
@@ -115,10 +114,9 @@ export default function HololiveTemplate({ schedule }: Props) {
               {/* DAY */}
               <div
                 style={{
-                  width: "90px",
-                  display: "flex",
-                  fontWeight: "900",
-                  fontSize: "22px",
+                  width: "120px",
+                  fontWeight: 900,
+                  fontSize: "32px",
                   color: "rgba(120,200,255,1)"
                 }}
               >
@@ -131,8 +129,7 @@ export default function HololiveTemplate({ schedule }: Props) {
                 <div
                   style={{
                     fontSize: "18px",
-                    fontWeight: "700",
-                    lineHeight: "18px"
+                    fontWeight: 700
                   }}
                 >
                   {event.mainText || "Event"}
@@ -141,7 +138,6 @@ export default function HololiveTemplate({ schedule }: Props) {
                 <div
                   style={{
                     fontSize: "14px",
-                    lineHeight: "14px",
                     color: "rgba(200,200,210,1)"
                   }}
                 >

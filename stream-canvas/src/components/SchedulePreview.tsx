@@ -2,6 +2,7 @@ import type { Schedule } from "../types/schedule"
 import { useRef } from "react"
 import { templateRegistry } from "../templates/templateRegistry"
 import { snapdom } from '@zumer/snapdom';
+import { motion } from "motion/react";
 
 
 interface Props {
@@ -16,7 +17,7 @@ export default function SchedulePreview({ schedule }: Props) {
 
     const exportImage = async () => {
 
-        if (!previewRef.current) return // seguridad
+        if (!previewRef.current) return 
 
         const result = await snapdom(previewRef.current, {
             scale: 2
@@ -36,12 +37,14 @@ export default function SchedulePreview({ schedule }: Props) {
                 <Template schedule={schedule} />
             </div>
 
-            <button
+            <motion.button
                 onClick={exportImage}
-                className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+                className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded z-50"
+                whileHover={{scale:1.05}}
+                whileTap={{scale:0.9}}
             >
                 Export PNG
-            </button>
+            </motion.button>
         </div>
 
     )
