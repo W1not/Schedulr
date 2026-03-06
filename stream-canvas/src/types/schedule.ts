@@ -21,6 +21,13 @@ export interface ScheduleEvent {
     active: boolean
 }
 
+export interface TemplateSettings {
+    backgroundColor?: string
+    headerColor?: string
+    textColor?: string
+    panelColor?: string
+}
+
 export type TemplateType =
     | "default"
     | "hololive"
@@ -29,7 +36,12 @@ export interface Schedule {
     title: string
     weekLabel: string
     backgroundImage?: string
+    backgroundX: number
+    backgroundY: number
+    backgroundScale: number
+    backgroundRotation: number
     template: TemplateType
     events: ScheduleEvent[]
+    templateSettings: TemplateSettings 
 }
 

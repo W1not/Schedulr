@@ -5,10 +5,15 @@ import ScheduleForm from "../components/ScheduleForm"
 
 const initialData: Schedule = {
     title: "WEEKLY SCHEDULE",
-    weekLabel: "Week of Mar 2",
+    weekLabel: "",
     backgroundImage: "",
+    backgroundX: 50,
+    backgroundY: 50,
+    backgroundScale: 100,
+    backgroundRotation: 0,
     template: "default",
-    events: []
+    events: [],
+    templateSettings: {}
 }
 
 export default function ScheduleBuilder() {
@@ -16,7 +21,7 @@ export default function ScheduleBuilder() {
 
     return (
         <div className="w-screen h-screen flex flex-row">
-            <div className="w-500px h-full overflow-y-auto bg-[#083344]">
+            <div className="w-600px h-full overflow-y-auto text-amber-50 bg-[#0d1117]">
                 <ScheduleForm
                     schedule={schedule}
                     setSchedule={setSchedule}
