@@ -1,5 +1,6 @@
+import { useState } from "react";
 import type { Schedule, ScheduleEvent, Day } from "../types/schedule"
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 interface Props {
     schedule: Schedule
@@ -7,6 +8,9 @@ interface Props {
 }
 
 export default function ScheduleForm({ schedule, setSchedule }: Props) {
+
+    const [bgOpen, setBgOpen] = useState(false)
+    const [bgSettings, setSettingsOpen] = useState(false)
 
     const days: Day[] = [
         "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"
@@ -49,13 +53,23 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
         }))
     }
 
+    const resetBackgroundValues = () => {
+        setSchedule(prev => ({
+            ...prev,
+            backgroundX: 50,
+            backgroundY: 50,
+            backgroundScale: 100,
+            backgroundRotation: 0
+        }))
+    }
+
     return (
-        <div className="p-5 overflow-y-auto">
+        <div className="p-5 overflow-y-auto min-w-600px max-w-600px">
 
             <h2 className="text-2xl font-bold mb-4">
                 Schedule Editor
             </h2>
-            
+
             <select
                 value={schedule.template}
                 onChange={(e) => setSchedule(prev => ({
@@ -134,6 +148,159 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                     }}
                 />
             </div>
+
+            <div>
+                <button
+                    type="button"
+                    onClick={() => setBgOpen(!bgOpen)}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-dusk transition-all duration-200">
+                    <span className="text-xs font-bold text-fog uppercase tracking-widest">
+                        🖼️ Background parameters
+                    </span>
+                    <motion.span
+                        animate={{ rotate: bgOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-fog"
+                    >
+                        ▾
+                    </motion.span>
+                </button>
+
+
+
+                <AnimatePresence>
+                    {bgOpen && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="px-4 pb-4 space-y-4 border-t border-slate pt-4">
+                                <div>
+                                    <label className="block text-xd font-bold text-fog uppercase tracking-widest mb-1.5">
+                                        X
+                                        <span className="ml-2 text-cyan font-mono">{schedule.backgroundX ?? 50}%</span>
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={0}
+                                        max={100}
+                                        value={schedule.backgroundX ?? 50}
+                                        onChange={(e) =>
+                                            setSchedule(prev => ({
+                                                ...prev,
+                                                backgroundX: Number(e.target.value)
+                                            }))
+                                        }
+                                        className="w-full accent-cyan"
+                                    />
+                                    <label className="block text-xd font-bold text-fog uppercase tracking-widest mb-1.5">
+                                        Y
+                                        <span className="ml-2 text-cyan font-mono">{schedule.backgroundY ?? 50}%</span>
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={0}
+                                        max={100}
+                                        value={schedule.backgroundY ?? 50}
+                                        onChange={(e) =>
+                                            setSchedule(prev => ({
+                                                ...prev,
+                                                backgroundY: Number(e.target.value)
+                                            }))
+                                        }
+                                        className="w-full accent-cyan"
+                                    />
+                                    <label className="block text-xd font-bold text-fog uppercase tracking-widest mb-1.5">
+                                        Scale
+                                        <span className="ml-2 text-cyan font-mono">{schedule.backgroundScale ?? 50}%</span>
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={100}
+                                        max={500}
+                                        value={schedule.backgroundScale ?? 50}
+                                        onChange={(e) =>
+                                            setSchedule(prev => ({
+                                                ...prev,
+                                                backgroundScale: Number(e.target.value)
+                                            }))
+                                        }
+                                        className="w-full accent-cyan"
+                                    />
+                                    <label className="block text-xd font-bold text-fog uppercase tracking-widest mb-1.5">
+                                        Rotation
+                                        <span className="ml-2 text-cyan font-mono">{schedule.backgroundRotation ?? 50}%</span>
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={-360}
+                                        max={360}
+                                        value={schedule.backgroundRotation ?? 1}
+                                        onChange={(e) =>
+                                            setSchedule(prev => ({
+                                                ...prev,
+                                                backgroundRotation: Number(e.target.value)
+                                            }))
+                                        }
+                                        className="w-full accent-cyan"
+                                    />
+
+                                    <motion.button
+                                        onClick={resetBackgroundValues}
+                                        className="mt-6 bg-blue-500 text-white px-4 py-2 rounded"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.9 }}
+                                    >
+                                        Reset Values
+                                    </motion.button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+                {/* Template Settings */}
+            <div>
+                <button
+                    type="button"
+                    onClick={() => setSettingsOpen(!bgSettings)}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-dusk transition-all duration-200">
+                    <span className="text-xs font-bold text-fog uppercase tracking-widest">
+                        🖼️ Template Settings
+                    </span>
+                    <motion.span
+                        animate={{ rotate: bgSettings ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-fog"
+                    >
+                        ▾
+                    </motion.span>
+                </button>
+
+
+
+                <AnimatePresence>
+                    {bgSettings && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="px-4 pb-4 space-y-4 border-t border-slate pt-4">
+                                <div>
+                                    
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
             {/* EVENTS */}
             <div className="space-y-4 ">
 

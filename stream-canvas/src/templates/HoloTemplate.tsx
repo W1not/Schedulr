@@ -28,11 +28,12 @@ export default function HololiveTemplate({ schedule }: Props) {
           alt=""
           style={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
+            top: `${schedule.backgroundY ?? 50}%`,
+            left: `${schedule.backgroundX ?? 50}%`,
+            scale: `${schedule.backgroundScale ?? 100}%`,
+            transform: `translate(-50%, -50%) rotate(${schedule.backgroundRotation ?? 0}deg)`,
             minWidth: "100%",
             minHeight: "100%",
-            transform: "translate(-50%, -50%)",
             zIndex: 0
           }}
         />
