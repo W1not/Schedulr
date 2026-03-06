@@ -6,7 +6,7 @@ interface Props {
 
 export default function HololiveTemplate({ schedule }: Props) {
 
-  const { backgroundColor, textColor,headerColor } = schedule.templateSettings
+  const { backgroundColor,headerColor } = schedule.templateSettings
 
   return (
 
