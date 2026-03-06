@@ -13,14 +13,14 @@ export default function SchedulePreview({ schedule }: Props) {
 
     const previewRef = useRef<HTMLDivElement>(null)
 
-    const Template = templateRegistry[schedule.template]
+    const Template = templateRegistry[schedule.template].component
 
     const exportImage = async () => {
 
         if (!previewRef.current) return 
 
         const result = await snapdom(previewRef.current, {
-            scale: 2
+            scale: 3
         })
 
         await result.download({

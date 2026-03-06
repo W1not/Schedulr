@@ -1,14 +1,98 @@
 import { useState } from "react";
-import type { Schedule, ScheduleEvent, Day } from "../types/schedule"
+import type { Schedule, ScheduleEvent, Day, TemplateSettings } from "../types/schedule"
 import { AnimatePresence, motion } from "motion/react";
+import { templateRegistry } from "../templates/templateRegistry"
 
 interface Props {
     schedule: Schedule
     setSchedule: React.Dispatch<React.SetStateAction<Schedule>>
 }
 
-export default function ScheduleForm({ schedule, setSchedule }: Props) {
+const PRESET_COLORS = [
+    "#00d4ff", // cyan
+    "#a78bfa", // lavender
+    "#ff9f7f", // peach
+    "#6ee7b7", // mint
+    "#ff4d6d", // red
+    "#ffd60a", // yellow
+    "#ffffff", // white
+    "#0d1117", // black
+]
 
+function ColorPicker({
+    label,
+    value,
+    onChange,
+}: {
+    label: string
+    value?: string
+    onChange: (color: string) => void
+}) {
+    return (
+        <div className="mb-4">
+            <label className="block text-xs font-bold text-fog uppercase tracking-widest mb-2">
+                {label}
+                <span className="ml-2 font-mono text-cyan normal-case">{value ?? "default"}</span>
+            </label>
+
+            <div className="flex items-center gap-2 flex-wrap">
+
+                {/* Colores preestablecidos */}
+                {PRESET_COLORS.map(color => (
+                    <button
+                        key={color}
+                        type="button"
+                        onClick={() => onChange(color)}
+                        style={{ backgroundColor: color }}
+                        className={`
+                            w-7 h-7 rounded-full transition-all duration-150 cursor-pointer
+                            hover:scale-110
+                            ${value === color
+                                ? "ring-2 ring-offset-2 ring-offset-ink ring-white scale-110"
+                                : "ring-1 ring-slate"
+                            }
+                        `}
+                    />
+                ))}
+
+                {/* Separador */}
+                <div className="w-px h-6 bg-slate mx-1" />
+
+                {/* Color custom */}
+                <label
+                    className="w-7 h-7 rounded-full cursor-pointer ring-1 ring-slate hover:scale-110 transition-all duration-150 overflow-hidden"
+                    title="Color personalizado"
+                    style={{ backgroundColor: value && !PRESET_COLORS.includes(value) ? value : "transparent" }}
+                >
+                    {(!value || PRESET_COLORS.includes(value)) && (
+                        <span className="flex items-center justify-center w-full h-full text-fog text-xs">+</span>
+                    )}
+                    <input
+                        type="color"
+                        value={value ?? "#ffffff"}
+                        onChange={(e) => onChange(e.target.value)}
+                        className="opacity-0 w-0 h-0 absolute"
+                    />
+                </label>
+
+                {/* Reset a default */}
+                {value && (
+                    <button
+                        type="button"
+                        onClick={() => onChange("")}
+                        className="text-xs text-fog hover:text-red-400 transition-colors ml-1"
+                    >
+                        ✕
+                    </button>
+                )}
+            </div>
+        </div>
+    )
+}
+
+export default function ScheduleForm({ schedule, setSchedule }: Props) {
+    const meta = templateRegistry[schedule.template] ?? templateRegistry["default"]
+    const supports = (s: keyof TemplateSettings) => meta.supportedSettings.includes(s)
     const [bgOpen, setBgOpen] = useState(false)
     const [bgSettings, setSettingsOpen] = useState(false)
 
@@ -148,7 +232,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                     }}
                 />
             </div>
-
+            {/* Background parameters */}
             <div>
                 <button
                     type="button"
@@ -262,7 +346,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                     )}
                 </AnimatePresence>
             </div>
-                {/* Template Settings */}
+            {/* Template Settings */}
             <div>
                 <button
                     type="button"
@@ -293,7 +377,40 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                         >
                             <div className="px-4 pb-4 space-y-4 border-t border-slate pt-4">
                                 <div>
-                                    
+                                    <label className="block text-xs font-bold text-fog uppercase tracking-widest">
+                                        {supports("backgroundColor") && (
+                                            <ColorPicker
+                                                label="Fondo"
+                                                value={schedule.templateSettings.backgroundColor}
+                                                onChange={(val) => setSchedule(prev => ({
+                                                    ...prev,
+                                                    templateSettings: { ...prev.templateSettings, backgroundColor: val }
+                                                }))}
+                                            />
+                                        )}
+
+                                        {supports("headerColor") && (
+                                            <ColorPicker
+                                                label="Header"
+                                                value={schedule.templateSettings.headerColor}
+                                                onChange={(val) => setSchedule(prev => ({
+                                                    ...prev,
+                                                    templateSettings: { ...prev.templateSettings, headerColor: val }
+                                                }))}
+                                            />
+                                        )}
+                                        
+                                        {supports("panelColor") && (
+                                            <ColorPicker
+                                                label="Panel"
+                                                value={schedule.templateSettings.panelColor}
+                                                onChange={(val) => setSchedule(prev => ({
+                                                    ...prev,
+                                                    templateSettings: { ...prev.templateSettings, panelColor: val }
+                                                }))}
+                                            />
+                                        )}
+                                    </label>
                                 </div>
                             </div>
                         </motion.div>

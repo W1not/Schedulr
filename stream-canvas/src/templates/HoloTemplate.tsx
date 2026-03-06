@@ -6,6 +6,8 @@ interface Props {
 
 export default function HololiveTemplate({ schedule }: Props) {
 
+  const { backgroundColor, textColor,headerColor } = schedule.templateSettings
+
   return (
 
     <div
@@ -16,7 +18,7 @@ export default function HololiveTemplate({ schedule }: Props) {
         overflow: "hidden",
         fontFamily: "sans-serif",
         color: "white",
-        backgroundColor: "rgba(20,20,30,1)"
+        backgroundColor: backgroundColor ?? "#0d1117"
       }}
     >
 
@@ -49,7 +51,7 @@ export default function HololiveTemplate({ schedule }: Props) {
           width: "45%",
           height: "100%",
           padding: "40px",
-          backgroundColor: "rgba(10,10,20,0.85)", // ← reemplazo del blur
+          backgroundColor: "rgba(10,10,20,0.85)",
           zIndex: 1
         }}
       >
@@ -71,7 +73,7 @@ export default function HololiveTemplate({ schedule }: Props) {
             style={{
               fontSize: "56px",
               fontWeight: 900,
-              color: "rgba(255,120,80,1)"
+              color: headerColor ?? "#F5BB27"
             }}
           >
             SCHEDULE

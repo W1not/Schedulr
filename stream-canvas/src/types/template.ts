@@ -1,4 +1,4 @@
-import type { Schedule } from "./schedule";
+import type { Schedule, TemplateSettings } from "./schedule";
 
 export interface TemplateMeta {
     id: string
@@ -11,6 +11,7 @@ export interface TemplateMeta {
     supportsBackground: boolean
     supportsSecondaryText: boolean
     supportsIcons: boolean
+    supportedSettings: (keyof TemplateSettings)[]
 
     component: React.ComponentType<{
         schedule: Schedule

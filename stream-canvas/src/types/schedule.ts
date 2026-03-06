@@ -21,6 +21,13 @@ export interface ScheduleEvent {
     active: boolean
 }
 
+export interface TemplateSettings {
+    backgroundColor?: string
+    headerColor?: string
+    textColor?: string
+    panelColor?: string
+}
+
 export type TemplateType =
     | "default"
     | "hololive"
@@ -35,5 +42,6 @@ export interface Schedule {
     backgroundRotation: number
     template: TemplateType
     events: ScheduleEvent[]
+    templateSettings: TemplateSettings 
 }
 

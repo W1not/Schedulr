@@ -7,8 +7,13 @@ const initialData: Schedule = {
     title: "WEEKLY SCHEDULE",
     weekLabel: "",
     backgroundImage: "",
+    backgroundX: 50,
+    backgroundY: 50,
+    backgroundScale: 100,
+    backgroundRotation: 0,
     template: "default",
-    events: []
+    events: [],
+    templateSettings: {}
 }
 
 export default function ScheduleBuilder() {
