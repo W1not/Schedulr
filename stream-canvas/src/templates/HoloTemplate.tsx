@@ -103,7 +103,8 @@ export default function HololiveTemplate({ schedule }: Props) {
             <div
               key={event.id}
               style={{
-                display: "grid",
+                display: "flex",
+                alignContent: "flex-center",
                 gridTemplateColumns: "90px 1fr",
                 backgroundColor: "rgba(255,255,255,0.08)",
                 borderRadius: "16px",
@@ -118,8 +119,7 @@ export default function HololiveTemplate({ schedule }: Props) {
                   display: "flex",
                   fontWeight: "900",
                   fontSize: "22px",
-                  color: "rgba(120,200,255,1)",
-                  transform: "translateY(-5px)"
+                  color: "rgba(120,200,255,1)"
                 }}
               >
                 {event.day}
