@@ -2,6 +2,7 @@ import type { Schedule } from "../types/schedule"
 import { useRef } from "react"
 import html2canvas from "html2canvas"
 import { templateRegistry } from "../templates/templateRegistry"
+import { snapdom } from '@zumer/snapdom';
 
 
 interface Props {
@@ -15,31 +16,20 @@ export default function SchedulePreview({ schedule }: Props) {
     const Template = templateRegistry[schedule.template]
 
     const exportImage = async () => {
+        const el = document.querySelector('#previewRef');
+        const result = await snapdom(el);
 
-        if (!previewRef.current) return
+        const img = await result.toPng();
+        document.body.appendChild(img);
 
-        // Esperar a que todas las fuentes carguen
-        await document.fonts.ready
-
-        const canvas = await html2canvas(previewRef.current, {
-            scale: 3,
-            useCORS: true,
-            backgroundColor: null,
-            logging: false,
-        })
-
-        const image = canvas.toDataURL("image/png")
-        const link = document.createElement("a")
-        link.href = image
-        link.download = "schedule.png"
-        link.click()
+        await result.download({ format: 'jpg', filename: 'my-capture.jpg' });
     }
 
     return (
         <div className="w-1/2 flex justify-center items-center flex-col p-8"
             style={{ backgroundColor: "#111827" }}>
 
-            <div ref={previewRef}>
+            <div id={previewRef}>
                 <Template schedule={schedule} />
             </div>
 
