@@ -6,7 +6,7 @@ interface Props {
 
 export default function HololiveTemplate({ schedule }: Props) {
 
-  const { backgroundColor,headerColor } = schedule.templateSettings
+  const { backgroundColor, headerColor } = schedule.templateSettings
 
   return (
 
@@ -29,15 +29,14 @@ export default function HololiveTemplate({ schedule }: Props) {
           src={schedule.backgroundImage}
           alt=""
           style={{
-            position: "absolute",
-            top: `${schedule.backgroundY ?? 50}%`,
-            left: `${schedule.backgroundX ?? 50}%`,
-            scale: `${schedule.backgroundScale ?? 100}%`,
-            transform: `translate(-50%, -50%) rotate(${schedule.backgroundRotation ?? 0}deg)`,
-            minWidth: "100%",
-            minHeight: "100%",
-            zIndex: 0
-          }}
+    position: "absolute",
+    top: `${schedule.backgroundY ?? 50}%`,
+    left: `${schedule.backgroundX ?? 50}%`,
+    minWidth: "100%",
+    minHeight: "100%",
+    transform: `translate(-50%, -50%) rotate(${schedule.backgroundRotation ?? 0}deg) scale(${(schedule.backgroundScale ?? 100) / 100})`,
+    zIndex: 0
+}}
         />
 
       )}
