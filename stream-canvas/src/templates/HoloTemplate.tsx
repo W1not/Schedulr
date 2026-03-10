@@ -29,14 +29,14 @@ export default function HololiveTemplate({ schedule }: Props) {
           src={schedule.backgroundImage}
           alt=""
           style={{
-    position: "absolute",
-    top: `${schedule.backgroundY ?? 50}%`,
-    left: `${schedule.backgroundX ?? 50}%`,
-    minWidth: "100%",
-    minHeight: "100%",
-    transform: `translate(-50%, -50%) rotate(${schedule.backgroundRotation ?? 0}deg) scale(${(schedule.backgroundScale ?? 100) / 100})`,
-    zIndex: 0
-}}
+            position: "absolute",
+            top: `${schedule.backgroundY ?? 50}%`,
+            left: `${schedule.backgroundX ?? 50}%`,
+            minWidth: "100%",
+            minHeight: "100%",
+            transform: `translate(-50%, -50%) rotate(${schedule.backgroundRotation ?? 0}deg) scale(${(schedule.backgroundScale ?? 100) / 100})`,
+            zIndex: 0
+          }}
         />
 
       )}
@@ -131,10 +131,11 @@ export default function HololiveTemplate({ schedule }: Props) {
                 <div
                   style={{
                     fontSize: "18px",
-                    fontWeight: 700
+                    fontWeight: 700,
+                    textTransform: "uppercase"
                   }}
                 >
-                  {event.mainText || "Event"}
+                  {event.mainText || "offline"}
                 </div>
 
                 <div
@@ -145,7 +146,21 @@ export default function HololiveTemplate({ schedule }: Props) {
                 >
                   {event.secondaryText}
                 </div>
-
+                {event.times && event.times.length > 0 && (
+                  <div style={{ display: "flex", gap: "12px", marginTop: "8px", flexWrap: "wrap" }}>
+                    {event.times.map(tz => (
+                      <span key={tz.label} style={{
+                        fontSize: "12px",
+                        color: "rgba(150,210,255,0.8)",
+                        backgroundColor: "rgba(255,255,255,0.05)",
+                        padding: "2px 8px",
+                        borderRadius: "6px"
+                      }}>
+                        {tz.label} {tz.time}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
             </div>

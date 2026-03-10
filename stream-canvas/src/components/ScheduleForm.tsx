@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Schedule, ScheduleEvent, Day, TemplateSettings } from "../types/schedule"
 import { AnimatePresence, motion } from "motion/react";
 import { templateRegistry } from "../templates/templateRegistry"
+import { convertToTimezones, TIMEZONE_OPTIONS } from "../utils/timezones"
 
 interface Props {
     schedule: Schedule
@@ -19,6 +20,73 @@ const PRESET_COLORS = [
     "#0d1117", // black
 ]
 
+export function CustomSelect({
+    value,
+    onChange,
+    options,
+    small = false,
+}: {
+    value: string
+    onChange: (val: string) => void
+    options: { value: string; label: string }[]
+    small?: boolean
+}) {
+    const [open, setOpen] = useState(false)
+    const selected = options.find((o) => o.value === value)
+
+    return (
+        <div className="relative w-full">
+            <button
+                type="button"
+                onClick={() => setOpen(!open)}
+                className={`
+                    w-full bg-dusk border border-slate text-snow font-medium
+                    rounded-xl cursor-pointer flex items-center justify-between
+                    focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan
+                    hover:border-cyan/50 transition-all duration-200
+                    ${small ? "px-3 py-1.5 text-xs" : "px-4 py-2.5 text-sm"}
+                `}
+            >
+                {selected?.label}
+                <motion.span
+                    animate={{ rotate: open ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-fog"
+                >
+                    ▾
+                </motion.span>
+            </button>
+
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute z-50 w-full mt-1.5 bg-ink border border-slate rounded-xl overflow-hidden shadow-lg shadow-black/40"
+                    >
+                        {options.map((option) => (
+                            <div
+                                key={option.value}
+                                onClick={() => { onChange(option.value); setOpen(false) }}
+                                className={`
+                                    px-4 py-2 text-sm cursor-pointer transition-all duration-150
+                                    ${value === option.value
+                                        ? "bg-cyan/20 text-cyan font-semibold"
+                                        : "text-snow hover:bg-dusk hover:text-cyan"
+                                    }
+                                `}
+                            >
+                                {option.label}
+                            </div>
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    )
+}
 // Component to select a color, with some presets and an option for custom colors
 function ColorPicker({
     label,
@@ -117,6 +185,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
             day: "MON",
             mainText: "",
             secondaryText: "",
+            startTime: "",
             active: true
         }
 
@@ -249,6 +318,26 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                     )}
                 </AnimatePresence>
             </div>
+
+            <label className="block text-xs font-bold text-fog uppercase tracking-widest mb-2">
+                Tu zona horaria
+            </label>
+            <CustomSelect
+                value={schedule.timezone}
+                onChange={(val) => {
+                    setSchedule(prev => ({
+                        ...prev,
+                        timezone: val,
+                        events: prev.events.map(ev => ({
+                            ...ev,
+                            times: ev.startTime
+                                ? convertToTimezones(ev.startTime, val)
+                                : ev.times
+                        }))
+                    }))
+                }}
+                options={TIMEZONE_OPTIONS.map(tz => ({ value: tz.zone, label: tz.label }))}
+            />
 
             {/* TITLE */}
             <div className="mb-4">
@@ -485,6 +574,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                                                 }))}
                                             />
                                         )}
+
                                     </label>
                                 </div>
                             </div>
@@ -548,6 +638,40 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                                 updateEvent(event.id, "secondaryText", e.target.value)
                             }
                         />
+
+                        <div className="flex flex-row gap-2">
+                            {/* Time Start */}
+                            <input
+                                className="w-full border p-2 rounded-sm mb-2"
+                                type="time"
+                                value={event.startTime ?? ""}
+                                onChange={(e) => {
+                                    const time = e.target.value
+                                    const times = convertToTimezones(time, schedule.timezone)
+
+                                    setSchedule(prev => ({
+                                        ...prev,
+                                        events: prev.events.map(ev =>
+                                            ev.id === event.id ? { ...ev, startTime: time, times }
+                                                : ev
+                                        )
+                                    }))
+                                }}
+                            />
+                        </div>
+
+
+                        {/* Preview de las zonas en el form */}
+                        {event.times && event.times.length > 0 && (
+                            <div className="flex gap-2 flex-wrap mt-2">
+                                {event.times.map(tz => (
+                                    <span key={tz.label} className="text-xs px-2 py-1 rounded-lg bg-cyan/10 text-cyan border border-cyan/20">
+                                        {tz.label} {tz.time}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+
 
 
 
