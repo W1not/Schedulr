@@ -19,6 +19,7 @@ const PRESET_COLORS = [
     "#0d1117", // black
 ]
 
+// Component to select a color, with some presets and an option for custom colors
 function ColorPicker({
     label,
     value,
@@ -35,7 +36,7 @@ function ColorPicker({
                 <span className="ml-2 font-mono text-cyan normal-case">{value ?? "default"}</span>
             </label>
 
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap py-2">
 
                 {/* Colores preestablecidos */}
                 {PRESET_COLORS.map(color => (
@@ -91,15 +92,25 @@ function ColorPicker({
 }
 
 export default function ScheduleForm({ schedule, setSchedule }: Props) {
+    // Obtain template metadata to know which settings are supported
     const meta = templateRegistry[schedule.template] ?? templateRegistry["default"]
     const supports = (s: keyof TemplateSettings) => meta.supportedSettings.includes(s)
+
+    // State for toggling background settings and template settings visibility
     const [bgOpen, setBgOpen] = useState(false)
+
+    // State for toggling template settings visibility
     const [bgSettings, setSettingsOpen] = useState(false)
 
+    const [templateOpen, setTemplateOpen] = useState(false)
+
+    // Days of the week for the dropdown
     const days: Day[] = [
         "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"
     ]
 
+    // Functions to manipulate events in the schedule
+    // Add a new event with default values
     const addEvent = () => {
         const newEvent: ScheduleEvent = {
             id: crypto.randomUUID(),
@@ -115,6 +126,8 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
         }))
     }
 
+    // Update a specific field of an event by its ID
+    // field is the key of ScheduleEvent that we want to update, value is the new value for that field
     const updateEvent = (
         id: string,
         field: keyof ScheduleEvent,
@@ -130,6 +143,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
         }))
     }
 
+    // Remove an event from the schedule by its ID
     const removeEvent = (id: string) => {
         setSchedule(prev => ({
             ...prev,
@@ -137,6 +151,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
         }))
     }
 
+    // Reset background values to defaults
     const resetBackgroundValues = () => {
         setSchedule(prev => ({
             ...prev,
@@ -148,32 +163,92 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
     }
 
     return (
-        <div className="p-5 overflow-y-auto min-w-600px max-w-600px">
+        <div className="p-5 flex flex-col overflow-y-auto gap-2">
 
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-5xl font-bold mb-4">
                 Schedule Editor
             </h2>
 
-            <select
-                value={schedule.template}
-                onChange={(e) => setSchedule(prev => ({
-                    ...prev,
-                    template: e.target.value as any
-                }))}
-                className="
-                        w-full px-4 py-2.5
-                        bg-ink border border-slate
-                        text-snow text-sm font-medium
-                        rounded-xl cursor-pointer
-                        appearance-none
-                        focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan
-                        transition-all duration-200
-                        hover:border-cyan/50
-                    "
-            >
-                <option value="default" className="bg-ink text-snow">Default</option>
-                <option value="hololive" className="bg-ink text-snow">Hololive</option>
-            </select>
+            <hr className="border-slate mb-6" />
+
+            <div className="bg-ink border border-slate rounded-2xl overflow-hidden">
+
+                {/* Header */}
+                <button
+                    type="button"
+                    onClick={() => setTemplateOpen(!templateOpen)}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-dusk transition-all duration-200"
+                >
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-fog uppercase tracking-widest">Plantilla</span>
+                        <span className="text-xs text-cyan font-medium">
+                            {templateRegistry[schedule.template]?.name}
+                        </span>
+                    </div>
+                    <motion.span
+                        animate={{ rotate: templateOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-fog"
+                    >
+                        ▾
+                    </motion.span>
+                </button>
+
+                <AnimatePresence>
+                    {templateOpen && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="px-3 pb-3 pt-1 grid grid-cols-2 gap-2 border-t border-slate">
+                                {Object.values(templateRegistry).map(meta => (
+                                    <button
+                                        key={meta.id}
+                                        type="button"
+                                        onClick={() => {
+                                            setSchedule(prev => ({ ...prev, template: meta.id as any }))
+                                            setTemplateOpen(false)
+                                        }}
+                                        className={`
+                                                    relative flex flex-col items-start gap-1.5
+                                                    p-3 rounded-xl border cursor-pointer
+                                                    transition-all duration-200 text-left
+                                ${schedule.template === meta.id
+                                                ? "border-cyan bg-cyan/10 ring-1 ring-cyan"
+                                                : "border-slate bg-dusk hover:border-cyan/40 hover:bg-cyan/5"
+                                            }
+                            `}
+                                    >
+                                        <div className={`
+                                w-full h-8 rounded-lg mb-1 flex items-center justify-center text-xs font-mono
+                                ${schedule.template === meta.id ? "bg-cyan/20 text-cyan" : "bg-slate/50 text-fog"}
+                            `}>
+                                            {meta.width}×{meta.height}
+                                        </div>
+
+                                        <span className={`text-sm font-semibold ${schedule.template === meta.id ? "text-cyan" : "text-snow"}`}>
+                                            {meta.name}
+                                        </span>
+
+                                        <div className="flex gap-1 flex-wrap">
+                                            {meta.supportsBackground && <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-lavender/20 text-lavender">BG</span>}
+                                            {meta.supportsSecondaryText && <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-mint/20 text-mint">2ND</span>}
+                                            {meta.supportsIcons && <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-peach/20 text-peach">ICO</span>}
+                                        </div>
+
+                                        {schedule.template === meta.id && (
+                                            <span className="absolute top-2 right-2 text-cyan text-xs">✓</span>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
 
             {/* TITLE */}
             <div className="mb-4">
@@ -182,7 +257,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                 </label>
 
                 <input
-                    className="w-full border p-2 rounded"
+                    className="w-full border p-2 rounded-2xl"
                     value={schedule.title}
                     onChange={(e) =>
                         setSchedule(prev => ({
@@ -200,7 +275,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                 </label>
 
                 <input
-                    className="w-full border p-2 rounded"
+                    className="w-full border p-2 rounded-2xl"
                     value={schedule.weekLabel}
                     onChange={(e) =>
                         setSchedule(prev => ({
@@ -399,7 +474,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                                                 }))}
                                             />
                                         )}
-                                        
+
                                         {supports("panelColor") && (
                                             <ColorPicker
                                                 label="Panel"
@@ -466,7 +541,7 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
 
                         {/* SECONDARY */}
                         <input
-                            className="w-full border p-2 rounded mb-2"
+                            className="w-full border p-2 rounded-sm mb-2"
                             placeholder="Secondary text"
                             value={event.secondaryText}
                             onChange={(e) =>
