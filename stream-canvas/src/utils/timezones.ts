@@ -1,6 +1,6 @@
 import type { TimeZoneEntry } from "../types/schedule";
 
-export const TIMEZONES_DISPLAY  = [
+export const TIMEZONES_DISPLAY = [
     { label: "MX", zone: "America/Mexico_City" },
     { label: "ARG", zone: "America/Argentina/Buenos_Aires" },
     { label: "CL", zone: "America/Santiago" },
@@ -8,15 +8,15 @@ export const TIMEZONES_DISPLAY  = [
 ]
 
 export const TIMEZONE_OPTIONS = [
-    { label: "México (GMT-6)",    zone: "America/Mexico_City" },
-    { label: "Argentina (GMT-3)", zone: "America/Argentina/Buenos_Aires" },
-    { label: "Chile (GMT-3/-4)",  zone: "America/Santiago" },
-    { label: "España (GMT+1/+2)", zone: "Europe/Madrid" },
-    { label: "Colombia (GMT-5)",  zone: "America/Bogota" },
-    { label: "Perú (GMT-5)",      zone: "America/Lima" },
-    { label: "Venezuela (GMT-4)", zone: "America/Caracas" },
-    { label: "USA Este (GMT-5)",  zone: "America/New_York" },
-    { label: "USA Oeste (GMT-8)", zone: "America/Los_Angeles" },
+    { label: "México", zone: "America/Mexico_City" },
+    { label: "Argentina", zone: "America/Argentina/Buenos_Aires" },
+    { label: "Chile", zone: "America/Santiago" },
+    { label: "España", zone: "Europe/Madrid" },
+    { label: "Colombia ", zone: "America/Bogota" },
+    { label: "Perú", zone: "America/Lima" },
+    { label: "Venezuela", zone: "America/Caracas" },
+    { label: "USA Este", zone: "America/New_York" },
+    { label: "USA Oeste", zone: "America/Los_Angeles" },
 ]
 
 export function convertToTimezones(time: string, fromZone: string): TimeZoneEntry[] {
@@ -31,15 +31,18 @@ export function convertToTimezones(time: string, fromZone: string): TimeZoneEntr
     const utcOffset = date.getTime() - new Date(date.toLocaleString("en-US", { timeZone: fromZone })).getTime()
     const utcDate = new Date(originTime.getTime() + utcOffset)
 
-    return TIMEZONES_DISPLAY
-        .filter(tz => tz.zone !== fromZone) 
-        .map(tz => ({
-            label: tz.label,
-            time: utcDate.toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-                timeZone: tz.zone
-            })
-        }))
+    const allZones = [
+        { label: TIMEZONE_OPTIONS.find(tz => tz.zone === fromZone)?.label ?? "LOCAL", zone: fromZone },
+        ...TIMEZONES_DISPLAY.filter(tz => tz.zone !== fromZone)  // evita duplicado
+    ]
+
+    return allZones.map(tz => ({
+        label: tz.label,
+        time: utcDate.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+            timeZone: tz.zone
+        })
+    }))
 }

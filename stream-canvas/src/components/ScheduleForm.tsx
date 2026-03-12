@@ -64,7 +64,7 @@ export function CustomSelect({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute z-50 w-full mt-1.5 bg-ink border border-slate rounded-xl overflow-hidden shadow-lg shadow-black/40"
+                        className="absolute z-50 w-full mt-1.5 bg-ink border border-slate rounded-xl overflow-hidden shadow-lg shadow-black/40 bg-cyan-950/95"
                     >
                         {options.map((option) => (
                             <div
@@ -618,7 +618,6 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                         </div>
                         {/* DAY */}
 
-
                         {/* MAIN TEXT */}
                         <input
                             className="w-full border p-2 rounded mb-2"
@@ -660,7 +659,6 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                             />
                         </div>
 
-
                         {/* Preview de las zonas en el form */}
                         {event.times && event.times.length > 0 && (
                             <div className="flex gap-2 flex-wrap mt-2">
@@ -671,10 +669,6 @@ export default function ScheduleForm({ schedule, setSchedule }: Props) {
                                 ))}
                             </div>
                         )}
-
-
-
-
                     </div>
 
                 ))}
