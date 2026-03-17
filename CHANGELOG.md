@@ -2,6 +2,10 @@
 The repository contains my professional portfolio built with React + Vite as the frontend technology and soon, with a backend technology.
 
 ### Release Notes:
+#### Version 1.1 16/03/2026
+- Add timezone
+- Fixed minor bugs
+  
 #### Version 1.0 10/03/2026
 - Add zoom, pan (drag-to-scroll), and wheel-zoom (Ctrl+wheel) controls with on-screen buttons and percentage display.
 - Implement export-to-PNG using snapdom; temporarily reset scale before capture for a crisp download. previewRef and scaleRef are used to capture the rendered template.
