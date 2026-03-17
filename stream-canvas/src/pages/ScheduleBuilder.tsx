@@ -10,6 +10,7 @@ import "./ScheduleBuilder.css"
 
 const initialData: Schedule = {
     title: "WEEKLY SCHEDULE",
+    timezone: "America/Mexico_City",
     weekLabel: "",
     backgroundImage: "",
     backgroundX: 50,

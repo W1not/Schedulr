@@ -17,6 +17,7 @@ export interface ScheduleEvent {
     day: Day
     mainText: string
     secondaryText?: string
+    startTime: string
     times?: TimeZoneEntry[]
     active: boolean
 }
@@ -33,6 +34,7 @@ export type TemplateType =
     | "hololive"
 
 export interface Schedule {
+    timezone: string
     title: string
     weekLabel: string
     backgroundImage?: string
